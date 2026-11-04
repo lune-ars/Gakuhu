@@ -234,4 +234,14 @@
     stopAudio();
   });
 
-  function stopAudio
+  function stopAudio() {
+    if (synth) {
+      synth.triggerRelease();
+    }
+    playBtn.disabled = false;
+    stopBtn.disabled = true;
+    statusText.innerText = "再生終了";
+  }
+</script>
+</body>
+</html>
