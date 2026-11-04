@@ -7,8 +7,8 @@
   
   <!-- 音声再生ライブラリ (Tone.js) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-  <!-- 文字認識OCRライブラリ (Tesseract.js) -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.min.js"></script>
+  <!-- 文字認識OCRライブラリ (Tesseract.js - バージョンを正しく指定) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <!-- 楽譜描画ライブラリ (VexFlow) -->
   <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 
@@ -146,12 +146,12 @@
         statusText.innerText = "楽譜の読み込みが完了しました！";
       }
 
-      // 4/4拍子に合わせて音符数を調整して表示
+      // 五線譜を描画
       renderStaff(parsedNotes.slice(0, 4));
       playBtn.disabled = false;
 
     } catch (err) {
-      statusText.innerText = "解析エラーが発生しました。";
+      statusText.innerText = "解析エラーが発生しました。コンソールを確認してください。";
       console.error(err);
     }
   });
@@ -166,7 +166,7 @@
         notes.push({
           key: map[char],
           note: `${char}4`,
-          duration: "q" // 4分音符
+          duration: "q"
         });
       }
     }
@@ -184,11 +184,9 @@
     const context = renderer.getContext();
     const stave = new Stave(10, 20, 400);
     
-    // ト音記号と4/4拍子を追加
     stave.addClef("treble").addTimeSignature("4/4");
     stave.setContext(context).draw();
 
-    // VexFlow用の音符オブジェクトを生成
     const vexNotes = notesData.map(n => 
       new StaveNote({
         keys: [n.key],
@@ -196,7 +194,6 @@
       })
     );
 
-    // 音符を五線譜上に配置して描画
     Formatter.FormatAndDraw(context, stave, vexNotes);
   }
 
